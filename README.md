@@ -20,7 +20,7 @@ Next run Poetry to install the bot dependencies.
 ```sh
 poetry install
 ```
-Next you need to configure the bot with the local dev settings. To do this copy the `example.yaml` file and name the new copy `production.yaml`. 
+Next you need to configure the bot with your settings. To do this copy the `example.yaml` file and name the new copy `production.yaml`. 
 
 Once that’s done open it up and in the `bot` section change the `token` string to your bot token.
 
