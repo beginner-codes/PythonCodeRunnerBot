@@ -1,9 +1,9 @@
-import beginner.logging
+from typing import Any, Dict, Optional, Sequence
 import functools
+import logging
 import os
 import pathlib
 import yaml
-from typing import Any, Dict, Optional, Sequence, Protocol
 
 
 class ScopedGetter:
@@ -15,7 +15,7 @@ class ScopedGetter:
 
 @functools.lru_cache()
 def get_config(filename: str) -> Dict[str, Any]:
-    logger = beginner.logging.get_logger()
+    logger = logging.getLogger("YamlConfig")
 
     project = pathlib.Path(__file__).parent.parent
     file_path = project / f"{filename}.yaml"
@@ -50,7 +50,7 @@ def get_setting(
     env_name: Optional[str] = None,
     default: Any = None,
 ) -> Any:
-    """ Searches through yaml config files and the environment for a setting. """
+    """Searches through yaml config files and the environment for a setting."""
     not_set = object()
     value = not_set
     for file in (get_config(filename) for filename in filenames):
