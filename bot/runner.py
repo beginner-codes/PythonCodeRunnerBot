@@ -295,11 +295,11 @@ class Executer:
                         sys.stderr.write("MemoryError: Exceeded process memory limits")
                     except CPUTimeExceeded:
                         sys.stderr.write(
-                            "Beginnerpy.CPUTimeError: Exceeded process CPU time limits"
+                            "CodeRunner.CPUTimeError: Exceeded process CPU time limits"
                         )
                     except ScriptTimedOut:
                         sys.stderr.write(
-                            "Beginnerpy.ScriptTimedOut: Script took too long to complete"
+                            "CodeRunner.ScriptTimedOut: Script took too long to complete"
                         )
                     except ImportError as ex:
                         sys.stderr.write(f"ImportError: {ex.args[0]}")
