@@ -2,45 +2,6 @@ import beginner.config as config
 import beginner.logging
 import nextcord.ext.commands
 import logging
-from beginner.models import set_database, PostgresqlDatabase, SqliteDatabase
-
-
-def connect_db(logger):
-    logger.info(f"Attempting to connect the DB")
-
-    db_settings = beginner.config.scope_getter("database")
-
-    name = db_settings("name", env_name="DB_NAME")
-    user = db_settings("user", env_name="DB_USER")
-    host = db_settings("host", env_name="DB_HOST")
-    port = db_settings("port", env_name="DB_PORT")
-    driver = db_settings("driver", env_name="DB_DRIVER", default="postgres")
-    mode = "require" if db_settings("PRODUCTION_BOT", default=False) else None
-    password = db_settings("pass", env_name="DB_PASSWORD")
-
-    logger.debug(
-        f"\nConnecting to database:\n"
-        f"- Name {name}\n"
-        f"- User {user}\n"
-        f"- Host {host}\n"
-        f"- Port {port}\n"
-        f"- Mode {mode}\n"
-        f"- Pass ******\n"
-        f"- Driver {driver}"
-    )
-
-    if driver == "postgres":
-        db = PostgresqlDatabase(
-            name,
-            user=user,
-            host=host,
-            port=port,
-            password=password,
-            sslmode=mode,
-        )
-    else:
-        db = SqliteDatabase(f"{name}.sqlite.db")
-    set_database(db)
 
 
 def create_bot(logger) -> nextcord.ext.commands.Bot:
