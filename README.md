@@ -2,7 +2,7 @@
 
 This is a simple bot for running Python code through Discord. It was originally developed for the [Beginner.Codes](https://discord.gg/sfHykntuGy) Discord server.
 
-> _**⚠️ USE AT YOUR OWN RISK ⚠️**_
+> __**⚠️ USE AT YOUR OWN RISK ⚠️**__
 > 
 > This bot will allow any user to run Python code on the computer that is running the bot. The bot is designed to do this in as safe a manner as possible. There is no way to be 100% certain that it cannot be hacked.
 
@@ -30,3 +30,6 @@ To run the bot you’ll need to be in the directory which you cloned the repo, a
 poetry run python -m bot
 ```
 This will create a virtual environment with all the required dependencies and run the bot.
+
+## Allowed Modules
+For safety reasons the bot only allows members to use a limited list of enabled modules. You can adjust this list by editing the `bot/allowed_modules.txt` file. Each line is an enabled module.
