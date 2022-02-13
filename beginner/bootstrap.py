@@ -1,16 +1,17 @@
 import beginner.config as config
-import beginner.logging
 import nextcord.ext.commands
 import logging
 
 
 def create_bot(logger) -> nextcord.ext.commands.Bot:
-    bot_settings = beginner.config.scope_getter("bot")
-    intents = nextcord.Intents.default()
-    intents.members = True
-    intents.presences = True
+    bot_settings = config.scope_getter("bot")
+    intent_settings: dict[str, bool] = bot_settings("intents", default={})
+    default_intents = intent_settings.pop("default", False)
+    intents = nextcord.Intents.default() if default_intents else nextcord.Intents.none()
+    for intent, setting in intent_settings.items():
+        setattr(intents, intent, setting)
 
-    logger.debug(f"Creating bot with prefix '{bot_settings('prefix')}'")
+    logger.info(f"Creating bot with prefix '{bot_settings('prefix')}'")
     client = nextcord.ext.commands.Bot(
         command_prefix=bot_settings("prefix"),
         activity=nextcord.Activity(
@@ -19,24 +20,22 @@ def create_bot(logger) -> nextcord.ext.commands.Bot:
         ),
         intents=intents,
     )
-    client.remove_command("help")
+    client.log = logger
     return client
 
 
 def load_cogs(client: nextcord.ext.commands.Bot, logger):
-    logger.debug("Loading cogs")
-    files = (
-        "production"
-        if beginner.config.get_setting("PRODUCTION_BOT")
-        else "development",
-    )
-    for cog, settings in beginner.config.get_scope("cogs", filenames=files):
+    logger.info("Loading cogs")
+    files = ("production" if config.get_setting("PRODUCTION_BOT") else "development",)
+    for cog, settings in config.get_scope("cogs", filenames=files):
         enabled = (
-            settings if isinstance(settings, bool) else settings.get("enabled", True)
+            settings.casefold() == "enable"
+            if isinstance(settings, str)
+            else settings.get("enabled", True)
         )
         path = (
             f"beginner.cogs.{cog}"
-            if isinstance(settings, bool) or not settings.get("from")
+            if isinstance(settings, str) or not settings.get("from")
             else settings.get("from")
         )
         if enabled:
@@ -53,14 +52,14 @@ def run(client, logger):
     if not token or len(token.strip()) != 59:
         message = (
             f"Got token: {repr(token)}\n"
-            f"Please set a token in your environment as DISCORD_TOKEN or in your developement.yaml file under 'bot' "
+            f"Please set a token in your environment as DISCORD_TOKEN or in your development.yaml file under 'bot' "
             f"with the key 'token'."
         )
         raise InvalidToken(message)
 
-    logger.debug("Starting the bot")
+    logger.info("Starting the bot")
     client.run(token)
-    logger.debug("Bot has exited")
+    logger.info("Bot has exited")
 
 
 def setup_logger():
@@ -92,7 +91,7 @@ def setup_logger():
         ),
     )
 
-    logger = beginner.logging.get_logger()
+    logger = logging.getLogger(log_settings("name", default="Bot"))
     logger.setLevel(level)
 
     for name, _level in log_settings("loggers", default={}).items():
@@ -103,7 +102,7 @@ def setup_logger():
 
 
 def _get_token():
-    token = beginner.config.get_setting(
+    token = config.get_setting(
         "token", scope="bot", env_name="DISCORD_TOKEN", default=""
     )
     return token.strip()
