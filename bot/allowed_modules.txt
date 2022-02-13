@@ -15,7 +15,6 @@ copyreg
 dataclasses
 datetime
 decimal
-dectest
 enum
 fractions
 functools
@@ -28,11 +27,9 @@ itertools
 json
 math
 numbers
-numpy
 operator
 pickle
 pprint
-pydantic
 random
 re
 reprlib
@@ -48,5 +45,4 @@ types
 typing
 unicodedata
 unittest
-urllib.parse
 weakref
