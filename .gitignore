@@ -110,5 +110,5 @@ postgres-data
 /manifests/bot-token.yaml
 /manifests/postgres-password.yaml
 /bot/env
-/development.yaml
+/production.yaml
 *.sqlite.db
