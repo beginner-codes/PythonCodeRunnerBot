@@ -26,8 +26,7 @@ def create_bot(logger) -> nextcord.ext.commands.Bot:
 
 def load_cogs(client: nextcord.ext.commands.Bot, logger):
     logger.info("Loading cogs")
-    files = ("production" if config.get_setting("PRODUCTION_BOT") else "development",)
-    for cog, settings in config.get_scope("cogs", filenames=files):
+    for cog, settings in config.get_scope("cogs"):
         enabled = (
             settings.casefold() == "enable"
             if isinstance(settings, str)
