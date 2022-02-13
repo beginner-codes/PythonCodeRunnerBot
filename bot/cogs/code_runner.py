@@ -1,4 +1,4 @@
-from beginner.cog import Cog
+from bot.cog import Cog
 from datetime import datetime, timedelta
 from nextcord.ext.commands import command
 from typing import Tuple

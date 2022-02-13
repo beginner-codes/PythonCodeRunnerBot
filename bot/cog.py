@@ -1,5 +1,5 @@
 from __future__ import annotations
-from beginner.loggable import Loggable
+from bot.loggable import Loggable
 from nextcord.ext import commands
 from nextcord import Client
 from typing import Union

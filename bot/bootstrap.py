@@ -1,4 +1,4 @@
-import beginner.config as config
+import bot.config as config
 import nextcord.ext.commands
 import logging
 
@@ -33,7 +33,7 @@ def load_cogs(client: nextcord.ext.commands.Bot, logger):
             else settings.get("enabled", True)
         )
         path = (
-            f"beginner.cogs.{cog}"
+            f"bot.cogs.{cog}"
             if isinstance(settings, str) or not settings.get("from")
             else settings.get("from")
         )
