@@ -185,7 +185,7 @@ class CodeRunner(Cog):
         self, mode: str, code: str, user_input: str = "", restricted=True
     ) -> Tuple[str, str, float]:
         proc = await asyncio.create_subprocess_shell(
-            f"python -m beginner.runner {mode}",
+            f"python -m bot.runner {mode}",
             stdin=asyncio.subprocess.PIPE,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
