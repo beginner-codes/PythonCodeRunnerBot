@@ -136,7 +136,7 @@ class CodeRunner(Cog):
         out, err, duration = await self.code_runner(
             "exec",
             code,
-            user_input,
+            user_input or "",
             restricted=restricted,
         )
 
