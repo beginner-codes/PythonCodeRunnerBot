@@ -4,14 +4,19 @@ import inspect
 import io
 import json
 import pathlib
-import resource
-import signal
 import sys
 import time
 import traceback
 import uuid
 import hashlib
 from types import ModuleType
+
+try:
+    import resource
+    import signal
+except ImportError:
+    resource = None
+    signal = None
 
 
 class Module:
@@ -134,8 +139,9 @@ class Executer:
 
         self.exception = False
 
-        signal.signal(signal.SIGXCPU, self.cpu_time_exceeded)
-        signal.signal(signal.SIGALRM, self.script_timed_out)
+        if resource:
+            signal.signal(signal.SIGALRM, self.script_timed_out)
+            signal.signal(signal.SIGXCPU, self.cpu_time_exceeded)
 
     def cpu_time_exceeded(self, signo, frame):
         raise CPUTimeExceeded()
@@ -274,13 +280,17 @@ class Executer:
                 if not exceptions:
                     code_object = compile(code_tree, "<string>", runner.__name__)
                     try:
+                        if resource:
+                            _, hard = resource.getrlimit(resource.RLIMIT_CPU)
+                            resource.setrlimit(resource.RLIMIT_CPU, (2, hard))
+
                         ns_globals = self.generate_globals(restricted)
-                        _, hard = resource.getrlimit(resource.RLIMIT_CPU)
-                        resource.setrlimit(resource.RLIMIT_CPU, (2, hard))
-                        signal.alarm(2)
+                        if signal:
+                            signal.alarm(2)
                         start = time.time_ns()
                         result = runner(code_object, ns_globals, ns_globals)
-                        signal.alarm(0)
+                        if signal:
+                            signal.alarm(0)
                         if runner == eval:
                             if docs:
                                 print(

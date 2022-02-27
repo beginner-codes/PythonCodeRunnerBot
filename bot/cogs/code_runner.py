@@ -202,7 +202,14 @@ class CodeRunner(Cog):
         self.log.debug(
             f"Running ({mode}, {restricted=}) code\n    >>> {formatted_code}\nInput\n    {formatted_user_input}"
         )
-        stdout, stderr = await proc.communicate(data)
+        finished, unfinished = await asyncio.wait([proc.communicate(data)], timeout=3)
+        if unfinished:
+            proc.terminate()
+            stdout, _ = await unfinished.pop()
+            stderr = b"TimeoutException: The code took too long to complete"
+        else:
+            stdout, stderr = await finished.pop()
+
         out, duration = self._split_run_time(stdout.decode())
 
         return out, stderr.decode(), duration
