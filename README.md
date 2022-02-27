@@ -27,7 +27,11 @@ Once that’s done open it up and in the `bot` section change the `token` string
 ## Running
 To run the bot you’ll need to be in the directory which you cloned the repo, and run the following command:
 ```sh
-poetry run python -m bot
+poetry shell
+```
+Once that runs you can start the bot by running
+```sh
+python -m bot
 ```
 This will create a virtual environment with all the required dependencies and run the bot.
 
